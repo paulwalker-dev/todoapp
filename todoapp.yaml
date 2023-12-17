@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todoapp-db
+  labels:
+    app: todoapp
+    layer: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todoapp
+      layer: db
+  template:
+    metadata:
+      labels:
+        app: todoapp
+        layer: db
+    spec:
+      containers:
+        - name: todoapp-db
+          image: redis:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6379
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todoapp-db
+spec:
+  selector:
+    app: todoapp
+    layer: db
+  ports:
+    - port: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todoapp
+  labels:
+    app: todoapp
+    layer: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todoapp
+      layer: frontend
+  template:
+    metadata:
+      labels:
+        app: todoapp
+        layer: frontend
+    spec:
+      containers:
+        - name: todoapp
+          image: ghcr.io/paulwalker-dev/todoapp
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_ADDR
+              value: todoapp-db:6379
+            - name: DB_NAME
+              value: '0'
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todoapp
+spec:
+  selector:
+    app: todoapp
+    layer: frontend
+  ports:
+    - port: 80
+      targetPort: 8000

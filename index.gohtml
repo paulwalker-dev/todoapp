@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Todo App</title>
+    <style>
+        li div {
+            display: flex;
+        }
+
+        li input {
+            margin-left: 1mm;
+        }
+    </style>
+</head>
+<body>
+<h1>All Todos</h1>
+<form action="/new" method="post">
+    <label for="todo">Todo:</label>
+    <input type="text" id="todo" name="todo">
+    <input type="submit" value="Add Todo">
+</form>
+<ul>
+    {{range .}}
+        <li>
+            <div>
+                {{if .Done}}
+                <s>
+                    {{end}}
+                    <b>{{.Body}}</b>
+                    {{if .Done}}
+                </s>
+            {{else}}
+                <form action="/finish/{{.ID}}" method="post">
+                    <input type="submit" value="Finish">
+                </form>
+            {{end}}
+            </div>
+        </li>
+    {{end}}
+</ul>
+<form action="/reset" method="post">
+    <input type="submit" value="Delete all">
+</form>
+</body>
+</html>

@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
         - name: todoapp
-          image: ghcr.io/paulwalker-dev/todoapp
+          image: ghcr.io/paulwalker-dev/todoapp:1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

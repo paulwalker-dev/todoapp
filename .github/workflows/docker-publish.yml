@@ -35,6 +35,9 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest
+            type=ref,event=branch
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v5.0.0

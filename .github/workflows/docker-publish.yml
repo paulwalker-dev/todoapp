@@ -2,7 +2,8 @@ name: Docker
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - '**'
     tags:
       - '*'
 
@@ -36,7 +37,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest
+            type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=branch
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
